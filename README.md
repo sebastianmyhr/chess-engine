@@ -1,2 +1,2 @@
 # chess-engine
-Chess Engine with AI
+A (work-in-progress) chess engine.
