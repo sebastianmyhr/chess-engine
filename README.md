@@ -1,5 +1,5 @@
 # chess-engine
-This is a chess game and engine written in C++ with a GUI created with SDL2. Catch2 will also act as a testing framework
+Chess Engine with AI
 
 # Instructions
 - brew install SDL2
