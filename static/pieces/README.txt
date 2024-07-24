@@ -1,8 +1,3 @@
-# Sebastian's Chess Engine
-This is my personal project, a chess game that will eventually have a working engine.
-
-## Credits
-
 Icpieces Blue piece set
 
 Original author: sadsnake1

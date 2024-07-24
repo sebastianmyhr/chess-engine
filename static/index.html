@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+        #board {
+            display: grid;
+            grid-template-columns: repeat(8, 50px);
+            grid-template-rows: repeat(8, 50px);
+            gap: 0px;
+            border: 2px solid #333;
+        }
+        .cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+        .white {
+            background-color: #ffffff;
+        }
+        .black {
+            background-color: #9bb8dd;
+        }
+        .piece {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="board"></div>
+    <script>
+        const pieceImages = {
+            1: { white: 'pw.svg', black: 'pb.svg' },
+            2: { white: 'nw.svg', black: 'nb.svg' },
+            3: { white: 'bw.svg', black: 'bb.svg' },
+            4: { white: 'rw.svg', black: 'rb.svg' },
+            5: { white: 'qw.svg', black: 'qb.svg' },
+            6: { white: 'kw.svg', black: 'kb.svg' }
+        };
+
+        const boardElement = document.getElementById('board');
+        let boardState = [];
+
+        function createBoard() {
+            for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 8; j++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell', (i + j) % 2 === 0 ? 'white' : 'black');
+                    cell.dataset.x = j;
+                    cell.dataset.y = i;
+                    cell.addEventListener('click', onCellClick);
+                    boardElement.appendChild(cell);
+                }
+            }
+        }
+
+        function onCellClick(event) {
+            const x = event.target.dataset.x;
+            const y = event.target.dataset.y;
+            console.log(`Cell clicked: (${x}, ${y})`);
+            // TODO: Handle piece selection and moves
+        }
+
+        function renderBoard() {
+            boardElement.childNodes.forEach(cell => {
+                const x = cell.dataset.x;
+                const y = cell.dataset.y;
+                const piece = boardState[y][x];
+                cell.innerHTML = '';
+                if (piece) {
+                    const img = document.createElement('img');
+                    img.src = `/static/pieces/${pieceImages[piece.type][piece.color === 0 ? 'white' : 'black']}`;
+                    img.classList.add('piece');
+                    cell.appendChild(img);
+                }
+            });
+        }
+
+        async function fetchBoard() {
+            const response = await fetch('/board');
+            boardState = await response.json();
+            renderBoard();
+        }
+
+        async function makeMove(fromX, fromY, toX, toY) {
+            const response = await fetch('/move', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ fromX, fromY, toX, toY })
+            });
+            boardState = await response.json();
+            renderBoard();
+        }
+
+        createBoard();
+        fetchBoard();
+    </script>
+</body>
+</html>
