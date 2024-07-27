@@ -41,12 +41,13 @@ function onCellClick(event) {
         if (boardState[y] && boardState[y][x]) {
             selectedPiece = { x, y };
             cell.classList.add('selected');
-            
         }
     } else {
         // Move the selected piece
         const fromX = selectedPiece.x;
         const fromY = selectedPiece.y;
+        
+        console.log(fromX + "," + fromY + " -> " + x + "," + y);
         
         if (fromX !== x || fromY !== y) {
             // Only move if the destination is different from the start
@@ -79,14 +80,26 @@ function renderBoard() {
     });
 }
 
-function movePiece(fromX, fromY, toX, toY) {
-    // Basic move logic (no validation)
-    if (boardState[fromY] && boardState[fromY][fromX]) {
-        const piece = boardState[fromY][fromX];
-        if (!boardState[toY]) boardState[toY] = [];
-        boardState[toY][toX] = piece;
-        boardState[fromY][fromX] = null;
+async function movePiece(fromX, fromY, toX, toY) {
+    try {
+        const response = await fetch('/move', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ fromX, fromY, toX, toY }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to make move');
+        }
+
+        boardState = await response.json();
         renderBoard();
+    } catch (error) {
+        console.error('Error making move:', error.message);
+        // alert(error.message); // Display error to the user
     }
 }
 
