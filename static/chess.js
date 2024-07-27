@@ -41,6 +41,7 @@ function onCellClick(event) {
         if (boardState[y] && boardState[y][x]) {
             selectedPiece = { x, y };
             cell.classList.add('selected');
+            
         }
     } else {
         // Move the selected piece
