@@ -1,6 +1,6 @@
 # Sebastian's Chess Engine
 
-![alt text](chess-ui.png "chess-ui")
+![chess-ui](chess-ui.png "chess-ui")
 
 This is my personal project, a chess game that will eventually have a working engine.
 

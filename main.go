@@ -66,8 +66,10 @@ func makeMove(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
 	board[move.ToY][move.ToX] = board[move.FromY][move.FromX]
 	board[move.FromY][move.FromX] = nil
+
 	c.JSON(http.StatusOK, board)
 }
 
